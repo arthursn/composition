@@ -53,12 +53,6 @@
  *       // std::cout << it->mB << std::endl; // This fails
  * }
  * @endcode
- * 
- * This can be very useful is a few situations. This is used in the SubSystem class
- * for iterating over the containers of the different interface cell types (ICell, 
- * CNICell, and SVICell) sliced to their base ICell class.
- * 
- * @sa SubSystem::ContainerBase
  */
 template <typename T>
 class Iterator {

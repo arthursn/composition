@@ -79,39 +79,28 @@ typedef const ElementData* ConstElementPointer;
 typedef std::vector<ConstElementPointer> VectorConstElementPointers;
 
 /// Iterable container of elements. It can be used with the range-based for syntax
-class ContainerElements {
+template <typename T>
+class PointersContainer {
 private:
-    VectorElementPointers mvElements; ///< Elements
+    std::vector<T*> mvElements; ///< Elements
 
 public:
     /// Constructor
-    ContainerElements(const VectorElementPointers& elements)
+    PointersContainer(const std::vector<T*>& elements)
         : mvElements(elements)
     {
     }
 
     /// Begin of the container
-    PointersIterator<ElementData> begin() { return &*mvElements.begin(); }
+    PointersIterator<T> begin() { return &*mvElements.begin(); }
     /// End of the container
-    PointersIterator<ElementData> end() { return &*mvElements.end(); }
+    PointersIterator<T> end() { return &*mvElements.end(); }
 };
 
-class ContainerConstElements {
-private:
-    VectorConstElementPointers mvElements; ///< Elements
-
-public:
-    /// Constructor
-    ContainerConstElements(const VectorConstElementPointers& elements)
-        : mvElements(elements)
-    {
-    }
-
-    /// Begin of the container
-    PointersIterator<ConstElementData> begin() { return &*mvElements.begin(); }
-    /// End of the container
-    PointersIterator<ConstElementData> end() { return &*mvElements.end(); }
-};
+/// Container of pointers to ElementData
+typedef PointersContainer<ElementData> ContainerElements;
+/// Container of pointers to const ElementData
+typedef PointersContainer<const ElementData> ContainerConstElements;
 
 /** @brief Base class to Composition with pointers to the the elements
  * 
@@ -221,22 +210,49 @@ public:
 /// of each element to concatenate them together
 #define APPEND_ELEMENT_POINTER(element, ...) &element,
 
-#define MAKE_COMPOSITION_CLASS(ClassName, FOR_ELEMENTS)                                                            \
-    class ClassName : public Composition {                                                                         \
-    private:                                                                                                       \
-        /* Overrides virtual functions from CompositionBase */                                                     \
-        VectorElementPointers getElementPointers() { return { FOR_ELEMENTS(APPEND_ELEMENT_POINTER) }; }            \
-        VectorConstElementPointers getElementPointers() const { return { FOR_ELEMENTS(APPEND_ELEMENT_POINTER) }; } \
-                                                                                                                   \
-    public:                                                                                                        \
-        /* Define elements (ElementData) as public members */                                                      \
-        FOR_ELEMENTS(DEFINE_ELEMENT)                                                                               \
-        /* Constructor */                                                                                          \
-        ClassName()                                                                                                \
-            : Composition()                                                                                        \
-        {                                                                                                          \
-            updatePointers();                                                                                      \
-        }                                                                                                          \
+/// Defines all elements and necessary virtual functions from Composition and CompositionBase
+#define MAKE_DEFINITIONS(FOR_ELEMENTS)                                                              \
+public:                                                                                             \
+    /* Define elements (ElementData) as public members */                                           \
+    FOR_ELEMENTS(DEFINE_ELEMENT)                                                                    \
+private:                                                                                            \
+    /* Override virtual functions */                                                                \
+    VectorElementPointers getElementPointers() { return { FOR_ELEMENTS(APPEND_ELEMENT_POINTER) }; } \
+    VectorConstElementPointers getElementPointers() const { return { FOR_ELEMENTS(APPEND_ELEMENT_POINTER) }; }
+
+/** @brief Make a composition class for a given set of elements
+ * 
+ * The macro takes two arguments, the name of the class ClassName and the
+ * macro FOR_ELEMENTS. In FOR_ELEMENTS are defined and used in the 
+ * following maner:
+ * 
+ * @code{.cpp}
+ * #define FOR_STEEL_ELEMENTS(DO) \
+ *     DO(Fe, false, false, true) \
+ *     DO(C, true, true)          \
+ *     DO(Mn, false, true)        \
+ *     DO(Si)
+ *     
+ * MAKE_COMPOSITION_CLASS(CompositionSteel, FOR_STEEL_ELEMENTS)
+ * @endcode
+ * 
+ * The DO notation in FOR_STEEL_ELEMENTS is used due to the X Macro
+ * technique used for making this class dynamic (see https://en.wikipedia.org/wiki/X_Macro)
+ * The arguments in the DO macro call follow the Constructor of ElementData,
+ * i.e., are respectively the element symbol, isInterstitial, isVariable, and
+ * isMajor.
+ */
+#define MAKE_COMPOSITION_CLASS(ClassName, FOR_ELEMENTS) \
+    class ClassName : public Composition {              \
+        /* Define elements and virtual functions */     \
+        MAKE_DEFINITIONS(FOR_ELEMENTS)                  \
+    public:                                             \
+        /* Constructor */                               \
+        ClassName()                                     \
+            : Composition()                             \
+        {                                               \
+            updatePointers();                           \
+        }                                               \
     };
 
 #endif
