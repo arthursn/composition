@@ -3,7 +3,6 @@
 #ifndef COMPOSITION_H
 #define COMPOSITION_H
 
-#include "iterator.h"
 #include "periodic_table.h"
 #include <map>
 #include <string>
@@ -85,6 +84,40 @@ private:
     std::vector<T*> mvElements; ///< Elements
 
 public:
+    /// Iterator for a container of pointers
+    class PointersIterator {
+    public:
+        using iterator_category = std::forward_iterator_tag;
+        using difference_type = std::ptrdiff_t;
+        using value_type = T;
+        using pointer = T*;
+        using reference = T&;
+
+        PointersIterator(pointer* ptrPtr)
+            : mvpPtrPtr(ptrPtr)
+        {
+        }
+
+        reference operator*() const { return **mvpPtrPtr; }
+        pointer operator->() { return *mvpPtrPtr; }
+        PointersIterator& operator++()
+        {
+            ++mvpPtrPtr;
+            return *this;
+        }
+        PointersIterator operator++(int)
+        {
+            PointersIterator tmp = *this;
+            ++(*this);
+            return tmp;
+        }
+        friend bool operator==(const PointersIterator& a, const PointersIterator& b) { return a.mvpPtrPtr == b.mvpPtrPtr; };
+        friend bool operator!=(const PointersIterator& a, const PointersIterator& b) { return a.mvpPtrPtr != b.mvpPtrPtr; };
+
+    private:
+        pointer* mvpPtrPtr; ///< Pointer to element of the container (which is also a pointer!)
+    };
+
     /// Constructor
     PointersContainer(const std::vector<T*>& elements)
         : mvElements(elements)
@@ -92,9 +125,9 @@ public:
     }
 
     /// Begin of the container
-    PointersIterator<T> begin() { return &*mvElements.begin(); }
+    PointersIterator begin() { return &*mvElements.begin(); }
     /// End of the container
-    PointersIterator<T> end() { return &*mvElements.end(); }
+    PointersIterator end() { return &*mvElements.end(); }
 };
 
 /// Container of pointers to ElementData
