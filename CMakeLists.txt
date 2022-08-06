@@ -1,22 +1,23 @@
 cmake_minimum_required(VERSION 3.10)
 
-project(composition VERSION 1.0)
+project(Composition VERSION 1.0)
 
 set(CMAKE_CXX_STANDARD 11)
 
+# bin directory
 set(BIN_DIR "${CMAKE_SOURCE_DIR}/bin")
 
-# Vendor files
-set(VENDOR_DIR "${CMAKE_SOURCE_DIR}/vendor")
-set(VENDOR_INCLUDE "${VENDOR_DIR}/include")
-file(GLOB VENDOR_SOURCES "${VENDOR_DIR}/src/*.cpp")
+# Include directory
+set(INCLUDE "${CMAKE_SOURCE_DIR}/include")
 
 # Source files
-set(SRC_DIR "${CMAKE_SOURCE_DIR}/src")
-file(GLOB SOURCES "${SRC_DIR}/*.cpp")
+file(GLOB SOURCES "${CMAKE_SOURCE_DIR}/src/*.cpp")
 
-# composition target
-add_executable(composition ${SOURCES} ${VENDOR_SOURCES})
-target_include_directories(composition PRIVATE ${SRC_DIR} ${VENDOR_INCLUDE})
-target_link_libraries(composition ${TQ_SO} dl pthread)
-set_target_properties(composition PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${BIN_DIR})
+# composition library target
+add_library(composition SHARED ${SOURCES})
+target_include_directories(composition PRIVATE ${INCLUDE})
+
+# basic_example target
+add_executable(basic_example "${CMAKE_SOURCE_DIR}/examples/basic_example.cpp")
+target_include_directories(basic_example PRIVATE ${INCLUDE})
+target_link_libraries(basic_example composition)

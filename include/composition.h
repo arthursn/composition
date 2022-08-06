@@ -5,11 +5,6 @@
 
 #include "iterator.h"
 #include "periodic_table.h"
-#ifndef NO_LOGURU
-#include <loguru.hpp>
-#else
-#include <not_loguru.hpp>
-#endif
 #include <map>
 #include <string>
 #include <vector>
@@ -214,8 +209,8 @@ public:
     void LockComposition();
     void UnlockComposition();
     void UpdateFractions();
-    void Print(int verbosity = 0, const char* preamble = "\n");
-    void Print(int verbosity = 0, const char* preamble = "\n") const;
+    void Print(FILE* stream = stdout);
+    void Print(FILE* stream = stdout) const;
 };
 
 /// Used together with FOR_ELEMENTS in MAKE_DEFINITIONS. Takes the element

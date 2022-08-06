@@ -1,5 +1,6 @@
 #include "composition.h"
 #include <cstdio>
+#include <stdexcept>
 
 // Converts string to title case
 static std::string toTitleCase(const std::string& str)
@@ -39,7 +40,7 @@ void ElementData::SetX(double x)
         mvUserW = mvW = mvU = 0.0;
         mvIsUpdated = false;
     } else {
-        LOG_F(ERROR, "Cannot set locked X(%s) composition", mvSymbol.c_str());
+        fprintf(stderr, "Cannot set locked X(%s) composition\n", mvSymbol.c_str());
     }
 }
 
@@ -55,10 +56,10 @@ void ElementData::SetW(double w)
             mvUserX = mvX = mvU = 0.0;
             mvIsUpdated = false;
         } else {
-            LOG_F(ERROR, "Setting mass fraction W(%s) not supported when composition is locked. Try setting in atomic fraction (ElementData::SetX) instead", mvSymbol.c_str());
+            fprintf(stderr, "Setting mass fraction W(%s) not supported when composition is locked. Try setting in atomic fraction (ElementData::SetX) instead\n", mvSymbol.c_str());
         }
     } else {
-        LOG_F(ERROR, "Cannot set locked W(%s) composition", mvSymbol.c_str());
+        fprintf(stderr, "Cannot set locked W(%s) composition\n", mvSymbol.c_str());
     }
 }
 
@@ -80,7 +81,7 @@ void CompositionBase::updatePointers()
     for (ElementPointer pEl : getElementPointers()) {
         if (pEl->mvIsMajor) {
             if (cntMajor > 1) {
-                LOG_F(ERROR, "CompositionBase::updatePointers: Error! More than one major elements defined (%s and %s)", (mvpMajorElement->mvSymbol).c_str(), (pEl->mvSymbol).c_str());
+                fprintf(stderr, "CompositionBase::updatePointers: Error! More than one major elements defined (%s and %s)\n", (mvpMajorElement->mvSymbol).c_str(), (pEl->mvSymbol).c_str());
                 return;
             }
             mvpMajorElement = pEl;
@@ -103,7 +104,7 @@ void CompositionBase::updatePointers()
     }
 
     if (cntMajor == 0) {
-        LOG_F(ERROR, "CompositionBase::updatePointers: Error! No major element defined!");
+        fprintf(stderr, "CompositionBase::updatePointers: Error! No major element defined!\n");
         return;
     }
 
@@ -143,7 +144,9 @@ ElementData& CompositionBase::operator[](const std::string& elementSymbol)
     }
 
     // Abort (throw exception) if cannot not find the element
-    ABORT_F("Element %s is not defined", elementSymbolTitle.c_str());
+    char msg[30]; // This should be long enough
+    sprintf(msg, "Element %s is not defined", elementSymbolTitle.c_str());
+    throw std::runtime_error(msg);
 }
 
 /** @brief const version of operator[] for accessing elements by their names 
@@ -162,7 +165,9 @@ const ElementData& CompositionBase::operator[](const std::string& elementSymbol)
     }
 
     // Abort (throw exception) if cannot not find the element
-    ABORT_F("Element %s is not defined", elementSymbolTitle.c_str());
+    char msg[30]; // This should be long enough
+    sprintf(msg, "Element %s is not defined", elementSymbolTitle.c_str());
+    throw std::runtime_error(msg);
 }
 
 /// @brief Locks composition, i.e., keeps site fraction of non-variable elements fixed
@@ -202,7 +207,7 @@ void Composition::UpdateFractions()
     updatePointers();
 
     if (mvpMajorElement == nullptr) {
-        LOG_F(ERROR, "Composition::UpdateFractions: Error! No major element defined!");
+        fprintf(stderr, "Composition::UpdateFractions: Error! No major element defined!\n");
         return;
     }
 
@@ -215,49 +220,41 @@ void Composition::UpdateFractions()
 
 /** @brief Updates the fractions and prints composition
  * 
- * @param verbosity Loguru verbosity level (e.g., 0 [INFO])
+ * @param stream The file stream (stdout by default)
  */
-void Composition::Print(int verbosity, const char* preamble)
+void Composition::Print(FILE* stream)
 {
     updatePointers();
 
     if (mvpMajorElement == nullptr) {
-        LOG_F(ERROR, "Composition::Print: Error! No major element defined!");
+        fprintf(stderr, "Composition::Print: Error! No major element defined!\n");
         return;
     }
 
     UpdateFractions();
 
     const auto* constThis = this;
-    constThis->Print(verbosity, preamble);
+    constThis->Print(stream);
 }
 
 /** @brief Prints the composition
  * 
- * @param verbosity Loguru verbosity level (e.g., 0 [INFO])
+ * @param stream The file stream (stdout by default)
  */
-void Composition::Print(int verbosity, const char* preamble) const
+void Composition::Print(FILE* stream) const
 {
-    char buff[1024]; // This buffer size should be big enough
-    std::string log;
-
-    log += std::string(preamble);
-    log += "        | At. fraction (X) | Wt. fraction (W) | Site fraction (U)\n";
-    log += "  ------+------------------+------------------+-------------------\n";
+    fprintf(stream, "        | At. fraction (X) | Wt. fraction (W) | Site fraction (U)\n"
+                    "  ------+------------------+------------------+-------------------\n");
 
     for (ConstElementPointer pEl : getElementPointers()) {
         if (pEl->mvX <= 0)
             continue;
 
         unsigned char pos = pEl->mvIsMajor ? 2 : (pEl->mvIsAllowedToVary ? 1 : 0);
-        sprintf(buff, "   %c%2s%c | %16.6g | %16.6g | %17.6g\n",
+        fprintf(stream, "   %c%2s%c | %16.6g | %16.6g | %17.6g\n",
             ">  "[pos], pEl -> mvSymbol.c_str(), "< *"[pos], pEl -> mvX, pEl -> mvW, pEl -> mvU);
-        log += std::string(buff);
     }
-    sprintf(buff, "  Average molar mass: %8g\n", mvMolarMassAvg);
-    log += std::string(buff);
-
-    VLOG_F((loguru::Verbosity)verbosity, "%s", log.c_str());
+    fprintf(stream, "  Average molar mass: %8g\n", mvMolarMassAvg);
 }
 
 /** @brief Private implementation of update fractions that is used when 
