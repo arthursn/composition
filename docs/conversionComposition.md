@@ -63,35 +63,45 @@ $$
 Notice the only unknown variables now are $M_{avg}$ and $x_0$. $M_{avg}$ and $x_0$ can be determined by solving this system of equations, which can be written in the matrix form as:
 
 $$
-\begin{bmatrix}
-    1 & \sum_{i=k+1}^{n} \frac{w_i}{M_i} \\ 
+{\left\lbrack 
+\matrix{
+    1 & \sum_{i=k+1}^{n} \frac{w_i}{M_i} \cr
     M_0 & \sum_{i=k+1}^{n} w_i - 1
-\end{bmatrix}
-\begin{bmatrix}
-    x_0 \\
+}
+\right\rbrack}
+{\left\lbrack 
+\matrix{
+    x_0 \cr
     M_{avg}
-\end{bmatrix}
-=
-\begin{bmatrix}
-    1 - \sum_{i=1}^{k} x_i \\
+}
+\right\rbrack} =
+{\left\lbrack 
+\matrix{
+    1 - \sum_{i=1}^{k} x_i \cr
     -\sum_{i=1}^{k} x_i \cdot M_i
-\end{bmatrix}
+}
+\right\rbrack}
 $$
 
 $$
-\begin{bmatrix}
-    0 & \left( \sum_{i=k+1}^{n} \frac{w_i}{M_i} \right) M_0 - \sum_{i=k+1}^{n} w_i + 1 \\ 
+{\left\lbrack 
+\matrix{
+    0 & \left( \sum_{i=k+1}^{n} \frac{w_i}{M_i} \right) M_0 - \sum_{i=k+1}^{n} w_i + 1 \cr
     M_0 & \sum_{i=k+1}^{n} w_i - 1
-\end{bmatrix}
-\begin{bmatrix}
-    x_0 \\
+}
+\right\rbrack}
+{\left\lbrack 
+\matrix{
+    x_0 \ce
     M_{avg}
-\end{bmatrix}
-=
-\begin{bmatrix}
-    \left( 1 - \sum_{i=1}^{k} x_i \right) M_0 + \sum_{i=1}^{k} x_i \cdot M_i \\
+}
+\right\rbrack} =
+{\left\lbrack 
+\matrix{
+    \left( 1 - \sum_{i=1}^{k} x_i \right) M_0 + \sum_{i=1}^{k} x_i \cdot M_i \cr
     -\sum_{i=1}^{k} x_i \cdot M_i
-\end{bmatrix}
+}
+\right\rbrack}
 $$
 
 Therefore:
