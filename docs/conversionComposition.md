@@ -77,8 +77,8 @@ $$
 \right\rbrack} =
 {\left\lbrack 
 \matrix{
-    1 - \sum_{i=1}^{k} x_i \cr
-    -\sum_{i=1}^{k} x_i \cdot M_i
+    1 - {\sum_{i=1}^{k} x_i} \cr
+    -{\sum_{i=1}^{k} x_i \cdot M_i}
 }
 \right\rbrack}
 $$
@@ -86,20 +86,20 @@ $$
 $$
 {\left\lbrack 
 \matrix{
-    0 & \left( \sum_{i=k+1}^{n} \frac{w_i}{M_i} \right) M_0 - \sum_{i=k+1}^{n} w_i + 1 \cr
-    M_0 & \sum_{i=k+1}^{n} w_i - 1
+    0 & \left( {\sum_{i=k+1}^{n} \frac{w_i}{M_i}} \right) M_0 - {\sum_{i=k+1}^{n} w_i} + 1 \cr
+    M_0 & {\sum_{i=k+1}^{n} w_i} - 1
 }
 \right\rbrack}
 {\left\lbrack 
 \matrix{
-    x_0 \ce
+    x_0 \cr
     M_{avg}
 }
 \right\rbrack} =
 {\left\lbrack 
 \matrix{
-    \left( 1 - \sum_{i=1}^{k} x_i \right) M_0 + \sum_{i=1}^{k} x_i \cdot M_i \cr
-    -\sum_{i=1}^{k} x_i \cdot M_i
+    \left( 1 - {\sum_{i=1}^{k} x_i} \right) M_0 + {\sum_{i=1}^{k} x_i \cdot M_i} \cr
+    -{\sum_{i=1}^{k} x_i} \cdot M_i
 }
 \right\rbrack}
 $$
@@ -107,14 +107,14 @@ $$
 Therefore:
 
 $$
-M_{avg} = \frac{\left( 1 - \sum_{i=1}^{k} x_i \right) M_0 + \sum_{i=1}^{k} x_i \cdot M_i}{\left( \sum_{i=k+1}^{n} \frac{w_i}{M_i} \right) M_0 - \sum_{i=k+1}^{n} w_i + 1}
+M_{avg} = \frac{\left( 1 - {\sum_{i=1}^{k} x_i} \right) M_0 + {\sum_{i=1}^{k} x_i \cdot M_i}}{\left( {\sum_{i=k+1}^{n} \frac{w_i}{M_i}} \right) M_0 - {\sum_{i=k+1}^{n} w_i} + 1}
 $$
 
 or, more elegantly:
 
 $$
-M_{avg} = \frac{M_0 - \sum_{i=1}^{k} \left( M_0 - M_i \right) x_i }
-{1 + \sum_{i=k+1}^{n} \left( \frac{M_0}{M_i} - 1\right) w_i}
+M_{avg} = \frac{M_0 - {\sum_{i=1}^{k} \left( M_0 - M_i \right) x_i }}
+{1 + {\sum_{i=k+1}^{n} \left( \frac{M_0}{M_i} - 1\right) w_i}}
 $$
 
 and:
