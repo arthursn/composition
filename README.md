@@ -18,12 +18,12 @@ The solution I found is MACROS! In `composition.h` we define an abstract class `
 /* The defined steel elements. The DO notation is used here due to the X Macro
 technique used for making this class dynamic (see https://en.wikipedia.org/wiki/X_Macro)
 The arguments in the DO macro call follow the Constructor of ElementData,
-i.e., are respectively the element symbol, isInterstitial, isVariable, and
+i.e., are respectively the element symbol, isVariable, isInterstitial, and
 isMajor */
 #define FOR_ELEMENTS(DO)       \
     DO(Fe, false, false, true) \
     DO(C, true, true)          \
-    DO(Mn, false, true)        \
+    DO(Mn, true)               \
     DO(Si)
 
 // Makes the CompositionSteel class
@@ -40,7 +40,7 @@ public:
     /* Define elements (ElementData) as public members */
     ElementData Fe = ElementData(PeriodicTable::Fe, false, false, true);
     ElementData C = ElementData(PeriodicTable::C, true, true);
-    ElementData Mn = ElementData(PeriodicTable::Mn, false, true);
+    ElementData Mn = ElementData(PeriodicTable::Mn, true);
     ElementData Si = ElementData(PeriodicTable::Si);
 
 private:
