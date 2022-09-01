@@ -15,11 +15,11 @@ static std::string toTitleCase(const std::string& str)
 /** @brief Constructor of ElementData
  * 
  * @param element The element from the periodic table (see the PeriodicTable namespace)
- * @param isInterstitial Boolean. If true, it is interstitial element (substitutional, otherwise) (Default: false)
  * @param isVariable Boolean. If true, composition of element is allowed to change even if Composition is locked (Default: false)
+ * @param isInterstitial Boolean. If true, it is interstitial element (substitutional, otherwise) (Default: false)
  * @param isMajor Boolean. If true, it is major element (Default: false)
  */
-ElementData::ElementData(const PeriodicTable::Element& element, bool isInterstitial, bool isVariable, bool isMajor)
+ElementData::ElementData(const PeriodicTable::Element& element, bool isVariable, bool isInterstitial, bool isMajor)
     : ElementData()
 {
     mvSymbol = element.Symbol;

@@ -13,8 +13,8 @@ class ElementData {
 private:
     std::string mvSymbol = "undefined"; ///< %Element symbol
     bool mvIsMajor = false; ///< If it is major element in Composition
-    bool mvIsInterstitial = false; ///< True if it is interstitial element, false if it is substitutional
     bool mvIsVariable = true; ///< If composition of element is allowed to be changed in Composition even when composition is locked
+    bool mvIsInterstitial = false; ///< True if it is interstitial element, false if it is substitutional
     bool mvIsAllowedToVary = true; ///< Flag used to temporarily allow composition of element to change when composition is unlocked
     bool mvIsUpdated = false; ///< If composition of element is updated in Composition
     bool mvIsCompositionLocked = false; ///< If Composition is locked
@@ -29,7 +29,7 @@ public:
     /// Default constructor
     ElementData() { }
     /// Constructor of ElementData
-    ElementData(const PeriodicTable::Element& element, bool isInterstitial = false, bool isVariable = false, bool isMajor = false);
+    ElementData(const PeriodicTable::Element& element, bool isVariable = false, bool isInterstitial = false, bool isMajor = false);
 
     /// @name Setters
     /// @{
@@ -272,7 +272,7 @@ private:                                                                        
  * The DO notation in FOR_STEEL_ELEMENTS is used due to the X Macro
  * technique used for making this class dynamic (see https://en.wikipedia.org/wiki/X_Macro)
  * The arguments in the DO macro call follow the Constructor of ElementData,
- * i.e., are respectively the element symbol, isInterstitial, isVariable, and
+ * i.e., are respectively the element symbol, isVariable, isInterstitial, and
  * isMajor.
  */
 #define MAKE_COMPOSITION_CLASS(ClassName, FOR_ELEMENTS) \

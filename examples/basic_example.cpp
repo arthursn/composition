@@ -8,8 +8,8 @@
 #define FOR_STEEL_ELEMENTS(DO) \
     DO(Fe, false, false, true) \
     DO(C, true, true)          \
-    DO(N, true)                \
-    DO(Mn, false, true)        \
+    DO(N, false, true)         \
+    DO(Mn, true)               \
     DO(Al)                     \
     DO(Si)                     \
     DO(P)                      \
@@ -28,6 +28,7 @@ int main()
     comp.C.SetW(.5e-2);
     comp.Mn.SetW(2e-2);
     comp.Cr.SetW(3e-2);
+    comp.LockComposition();
 
     comp.Print();
 
