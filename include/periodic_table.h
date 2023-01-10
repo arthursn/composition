@@ -14,124 +14,124 @@ struct Element {
     double MolarMass; ///< The molar mass
 };
 
-extern const Element H; ///< Hydrogen
-extern const Element He; ///< Helium
-extern const Element Li; ///< Lithium
-extern const Element Be; ///< Beryllium
-extern const Element B; ///< Boron
-extern const Element C; ///< Carbon
-extern const Element N; ///< Nitrogen
-extern const Element O; ///< Oxygen
-extern const Element F; ///< Fluorine
-extern const Element Ne; ///< Neon
-extern const Element Na; ///< Sodium
-extern const Element Mg; ///< Magnesium
-extern const Element Al; ///< Aluminum
-extern const Element Si; ///< Silicon
-extern const Element P; ///< Phosphorus
-extern const Element S; ///< Sulfur
-extern const Element Cl; ///< Chlorine
-extern const Element Ar; ///< Argon
-extern const Element K; ///< Potassium
-extern const Element Ca; ///< Calcium
-extern const Element Sc; ///< Scandium
-extern const Element Ti; ///< Titanium
-extern const Element V; ///< Vanadium
-extern const Element Cr; ///< Chromium
-extern const Element Mn; ///< Manganese
-extern const Element Fe; ///< Iron
-extern const Element Co; ///< Cobalt
-extern const Element Ni; ///< Nickel
-extern const Element Cu; ///< Copper
-extern const Element Zn; ///< Zinc
-extern const Element Ga; ///< Gallium
-extern const Element Ge; ///< Germanium
-extern const Element As; ///< Arsenic
-extern const Element Se; ///< Selenium
-extern const Element Br; ///< Bromine
-extern const Element Kr; ///< Krypton
-extern const Element Rb; ///< Rubidium
-extern const Element Sr; ///< Strontium
-extern const Element Y; ///< Yttrium
-extern const Element Zr; ///< Zirconium
-extern const Element Nb; ///< Niobium
-extern const Element Mo; ///< Molybdenum
-extern const Element Tc; ///< Technetium
-extern const Element Ru; ///< Ruthenium
-extern const Element Rh; ///< Rhodium
-extern const Element Pd; ///< Palladium
-extern const Element Ag; ///< Silver
-extern const Element Cd; ///< Cadmium
-extern const Element In; ///< Indium
-extern const Element Sn; ///< Tin
-extern const Element Sb; ///< Antimony
-extern const Element Te; ///< Tellurium
-extern const Element I; ///< Iodine
-extern const Element Xe; ///< Xenon
-extern const Element Cs; ///< Cesium
-extern const Element Ba; ///< Barium
-extern const Element La; ///< Lanthanum
-extern const Element Ce; ///< Cerium
-extern const Element Pr; ///< Praseodymium
-extern const Element Nd; ///< Neodymium
-extern const Element Pm; ///< Promethium
-extern const Element Sm; ///< Samarium
-extern const Element Eu; ///< Europium
-extern const Element Gd; ///< Gadolinium
-extern const Element Tb; ///< Terbium
-extern const Element Dy; ///< Dysprosium
-extern const Element Ho; ///< Holmium
-extern const Element Er; ///< Erbium
-extern const Element Tm; ///< Thulium
-extern const Element Yb; ///< Ytterbium
-extern const Element Lu; ///< Lutetium
-extern const Element Hf; ///< Hafnium
-extern const Element Ta; ///< Tantalum
-extern const Element W; ///< Tungsten
-extern const Element Re; ///< Rhenium
-extern const Element Os; ///< Osmium
-extern const Element Ir; ///< Iridium
-extern const Element Pt; ///< Platinum
-extern const Element Au; ///< Gold
-extern const Element Hg; ///< Mercury
-extern const Element Tl; ///< Thallium
-extern const Element Pb; ///< Lead
-extern const Element Bi; ///< Bismuth
-extern const Element Po; ///< Polonium
-extern const Element At; ///< Astatine
-extern const Element Rn; ///< Radon
-extern const Element Fr; ///< Francium
-extern const Element Ra; ///< Radium
-extern const Element Ac; ///< Actinium
-extern const Element Th; ///< Thorium
-extern const Element Pa; ///< Protactinium
-extern const Element U; ///< Uranium
-extern const Element Np; ///< Neptunium
-extern const Element Pu; ///< Plutonium
-extern const Element Am; ///< Americium
-extern const Element Cm; ///< Curium
-extern const Element Bk; ///< Berkelium
-extern const Element Cf; ///< Californium
-extern const Element Es; ///< Einsteinium
-extern const Element Fm; ///< Fermium
-extern const Element Md; ///< Mendelevium
-extern const Element No; ///< Nobelium
-extern const Element Lr; ///< Lawrencium
-extern const Element Rf; ///< Rutherfordium
-extern const Element Db; ///< Dubnium
-extern const Element Sg; ///< Seaborgium
-extern const Element Bh; ///< Bohrium
-extern const Element Hs; ///< Hassium
-extern const Element Mt; ///< Meitnerium
-extern const Element Ds; ///< Darmstadtium
-extern const Element Rg; ///< Roentgenium
-extern const Element Cn; ///< Copernicium
-extern const Element Nh; ///< Nihonium
-extern const Element Fl; ///< Flerovium
-extern const Element Mc; ///< Moscovium
-extern const Element Lv; ///< Livermorium
-extern const Element Ts; ///< Tennessine
-extern const Element Og; ///< Oganesson
+const Element H { "H", "Hydrogen", 1, 1.00794 };
+const Element He { "He", "Helium", 2, 4.002602 };
+const Element Li { "Li", "Lithium", 3, 6.941 };
+const Element Be { "Be", "Beryllium", 4, 9.012182 };
+const Element B { "B", "Boron", 5, 10.811 };
+const Element C { "C", "Carbon", 6, 12.0107 };
+const Element N { "N", "Nitrogen", 7, 14.0067 };
+const Element O { "O", "Oxygen", 8, 15.9994 };
+const Element F { "F", "Fluorine", 9, 18.9984032 };
+const Element Ne { "Ne", "Neon", 10, 20.1797 };
+const Element Na { "Na", "Sodium", 11, 22.98977 };
+const Element Mg { "Mg", "Magnesium", 12, 24.305 };
+const Element Al { "Al", "Aluminum", 13, 26.981538 };
+const Element Si { "Si", "Silicon", 14, 28.0855 };
+const Element P { "P", "Phosphorus", 15, 30.973761 };
+const Element S { "S", "Sulfur", 16, 32.065 };
+const Element Cl { "Cl", "Chlorine", 17, 35.453 };
+const Element Ar { "Ar", "Argon", 18, 39.948 };
+const Element K { "K", "Potassium", 19, 39.0983 };
+const Element Ca { "Ca", "Calcium", 20, 40.078 };
+const Element Sc { "Sc", "Scandium", 21, 44.95591 };
+const Element Ti { "Ti", "Titanium", 22, 47.867 };
+const Element V { "V", "Vanadium", 23, 50.9415 };
+const Element Cr { "Cr", "Chromium", 24, 51.9961 };
+const Element Mn { "Mn", "Manganese", 25, 54.938049 };
+const Element Fe { "Fe", "Iron", 26, 55.845 };
+const Element Co { "Co", "Cobalt", 27, 58.9332 };
+const Element Ni { "Ni", "Nickel", 28, 58.6934 };
+const Element Cu { "Cu", "Copper", 29, 63.546 };
+const Element Zn { "Zn", "Zinc", 30, 65.409 };
+const Element Ga { "Ga", "Gallium", 31, 69.723 };
+const Element Ge { "Ge", "Germanium", 32, 72.64 };
+const Element As { "As", "Arsenic", 33, 74.9216 };
+const Element Se { "Se", "Selenium", 34, 78.96 };
+const Element Br { "Br", "Bromine", 35, 79.904 };
+const Element Kr { "Kr", "Krypton", 36, 83.798 };
+const Element Rb { "Rb", "Rubidium", 37, 85.4678 };
+const Element Sr { "Sr", "Strontium", 38, 87.62 };
+const Element Y { "Y", "Yttrium", 39, 88.90585 };
+const Element Zr { "Zr", "Zirconium", 40, 91.224 };
+const Element Nb { "Nb", "Niobium", 41, 92.90638 };
+const Element Mo { "Mo", "Molybdenum", 42, 95.94 };
+const Element Tc { "Tc", "Technetium", 43, 98 };
+const Element Ru { "Ru", "Ruthenium", 44, 101.07 };
+const Element Rh { "Rh", "Rhodium", 45, 102.9055 };
+const Element Pd { "Pd", "Palladium", 46, 106.42 };
+const Element Ag { "Ag", "Silver", 47, 107.8682 };
+const Element Cd { "Cd", "Cadmium", 48, 112.411 };
+const Element In { "In", "Indium", 49, 114.818 };
+const Element Sn { "Sn", "Tin", 50, 118.71 };
+const Element Sb { "Sb", "Antimony", 51, 121.76 };
+const Element Te { "Te", "Tellurium", 52, 127.6 };
+const Element I { "I", "Iodine", 53, 126.90447 };
+const Element Xe { "Xe", "Xenon", 54, 131.293 };
+const Element Cs { "Cs", "Cesium", 55, 132.90545 };
+const Element Ba { "Ba", "Barium", 56, 137.327 };
+const Element La { "La", "Lanthanum", 57, 138.9055 };
+const Element Ce { "Ce", "Cerium", 58, 140.116 };
+const Element Pr { "Pr", "Praseodymium", 59, 140.90765 };
+const Element Nd { "Nd", "Neodymium", 60, 144.24 };
+const Element Pm { "Pm", "Promethium", 61, 145 };
+const Element Sm { "Sm", "Samarium", 62, 150.36 };
+const Element Eu { "Eu", "Europium", 63, 151.964 };
+const Element Gd { "Gd", "Gadolinium", 64, 157.25 };
+const Element Tb { "Tb", "Terbium", 65, 158.92534 };
+const Element Dy { "Dy", "Dysprosium", 66, 162.5 };
+const Element Ho { "Ho", "Holmium", 67, 164.93032 };
+const Element Er { "Er", "Erbium", 68, 167.259 };
+const Element Tm { "Tm", "Thulium", 69, 168.93421 };
+const Element Yb { "Yb", "Ytterbium", 70, 173.04 };
+const Element Lu { "Lu", "Lutetium", 71, 174.967 };
+const Element Hf { "Hf", "Hafnium", 72, 178.49 };
+const Element Ta { "Ta", "Tantalum", 73, 180.9479 };
+const Element W { "W", "Tungsten", 74, 183.84 };
+const Element Re { "Re", "Rhenium", 75, 186.207 };
+const Element Os { "Os", "Osmium", 76, 190.23 };
+const Element Ir { "Ir", "Iridium", 77, 192.217 };
+const Element Pt { "Pt", "Platinum", 78, 195.078 };
+const Element Au { "Au", "Gold", 79, 196.96655 };
+const Element Hg { "Hg", "Mercury", 80, 200.59 };
+const Element Tl { "Tl", "Thallium", 81, 204.3833 };
+const Element Pb { "Pb", "Lead", 82, 207.2 };
+const Element Bi { "Bi", "Bismuth", 83, 208.98038 };
+const Element Po { "Po", "Polonium", 84, 209 };
+const Element At { "At", "Astatine", 85, 210 };
+const Element Rn { "Rn", "Radon", 86, 222 };
+const Element Fr { "Fr", "Francium", 87, 223 };
+const Element Ra { "Ra", "Radium", 88, 226 };
+const Element Ac { "Ac", "Actinium", 89, 227 };
+const Element Th { "Th", "Thorium", 90, 232.0381 };
+const Element Pa { "Pa", "Protactinium", 91, 231.03588 };
+const Element U { "U", "Uranium", 92, 238.02891 };
+const Element Np { "Np", "Neptunium", 93, 237 };
+const Element Pu { "Pu", "Plutonium", 94, 244 };
+const Element Am { "Am", "Americium", 95, 243 };
+const Element Cm { "Cm", "Curium", 96, 247 };
+const Element Bk { "Bk", "Berkelium", 97, 247 };
+const Element Cf { "Cf", "Californium", 98, 251 };
+const Element Es { "Es", "Einsteinium", 99, 252 };
+const Element Fm { "Fm", "Fermium", 100, 257 };
+const Element Md { "Md", "Mendelevium", 101, 258 };
+const Element No { "No", "Nobelium", 102, 259 };
+const Element Lr { "Lr", "Lawrencium", 103, 262 };
+const Element Rf { "Rf", "Rutherfordium", 104, 261 };
+const Element Db { "Db", "Dubnium", 105, 262 };
+const Element Sg { "Sg", "Seaborgium", 106, 266 };
+const Element Bh { "Bh", "Bohrium", 107, 264 };
+const Element Hs { "Hs", "Hassium", 108, 277 };
+const Element Mt { "Mt", "Meitnerium", 109, 268 };
+const Element Ds { "Ds", "Darmstadtium", 110, 281 };
+const Element Rg { "Rg", "Roentgenium", 111, 272 };
+const Element Cn { "Cn", "Copernicium", 112, 285 };
+const Element Nh { "Nh", "Nihonium", 113, 286 };
+const Element Fl { "Fl", "Flerovium", 114, 289 };
+const Element Mc { "Mc", "Moscovium", 115, 289 };
+const Element Lv { "Lv", "Livermorium", 116, 293 };
+const Element Ts { "Ts", "Tennessine", 117, 294 };
+const Element Og { "Og", "Oganesson", 118, 294 };
 }
 
 #endif
