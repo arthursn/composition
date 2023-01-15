@@ -1,10 +1,10 @@
-# `libcomposition`
+# libcomposition
 
 # Background
 
 The conversion between atomic and weight composition bases is normally a very straightforward problem. Having the molar masses of the elements, one can easily determine the average molar mass and from then convert the individual fractions of each element.
 
-However, if for some reason the composition is provided by defined the fractions of some elements in the atomic base and others in the weight base, then the problem becomes a little bit more complicated. Yet, it is perfectly possible to make the conversion. The equations for base conversion are presented in the supplementary document in [docs > conversionComposition](docs/conversionComposition.md).
+However, if for some reason the composition is provided by defining the fractions of some elements in the atomic base and others in the weight base, then the problem becomes a little bit more complicated. Yet, it is perfectly possible to make the conversion. The equations for base conversion are presented in the supplementary document in [docs > conversionComposition](docs/conversionComposition.md).
 
 Okay, having the equations remove one thing out of the way. Now we want to write a C++ that does that. But we want the class to be dynamic, supporting multiple elements, but at the same time fast. A very bad idea is to use use `std::map` for that, because accessing the elements of the map by key is quite slow. It would be nicer if we could access the fractions of each element by symbol, but having the symbols as public member variables of the composition class.
 
@@ -30,7 +30,7 @@ isMajor */
 MAKE_COMPOSITION_CLASS(CompositionSteel, FOR_ELEMENTS)
 ```
 
-Notice that you also have to defined a `FOR_ELEMENTS` macro with this funny `DO` syntax. This is because of the X Macro technique that we use to make the class dynamic (see https://en.wikipedia.org/wiki/X_Macro).
+Notice that you also have to defined a `FOR_ELEMENTS` macro with this funny `DO` syntax. This is the X Macro technique that we use to make the class dynamic (see https://en.wikipedia.org/wiki/X_Macro).
 
 In the example above `MAKE_COMPOSITION_CLASS(CompositionSteel, FOR_ELEMENTS)` will be expanded in the pre-processing as the following `CompositionSteel` class:
 
@@ -58,7 +58,11 @@ public:
 };
 ```
 
-The `ElementData` class stores the fractions of the element. When defining the `FOR_ELEMENTS` macro or instantiating `ElementData`, the arguments represent the element symbol (whose properties are fetched from `periodictable.h`), `isInterstitial` (i.e., where is a interstitial element), `isVariable` (whether the element is allowed to vary when the composition is locked, see [Locking compositions](#Locking-compositions)), and `isMajor` (whether the element is the major element).
+The `ElementData` class stores the fractions of the element. When defining the `FOR_ELEMENTS` macro or instantiating `ElementData`, the arguments represent, in order:
+- `element`: the element symbol (in Title Case), whose properties are fetched from `periodictable.h`
+- `isInterstitial`: whether the element is interstitial or not (i.e., substitutional)
+- `isVariable`: whether the element is allowed to vary when the composition is locked, see [Locking compositions](#Locking-compositions))
+- `isMajor`: whether the element is the major element
 
 Then, in the body of your code, you can use the newly created class at will:
 
@@ -89,7 +93,7 @@ comp.C.GetX(); // returns 0.0228126 (double)
 comp.Si.GetW(); // returns 0.000512517 (double)
 ```
 
-Even though it is slow, you can also access the element using the map syntax:
+Even though it is slower, you can also access the element using the map syntax:
 
 ```cpp
 comp["C"].GetX();
@@ -107,7 +111,7 @@ for (ElementData& el : comp.GetElements()) {
 ```
 ## Locking compositions
 
-When we are modelling local changes of composition in a material, one tricky thing that we face is that changing the fraction of one element should change the fractions of all other elements, as the average molar mass changes! Normally, the intent is that you want to change the fraction of an element and keep the **site fractions** of all other elements fixed. So in the Composition class, there is a method `LockComposition` that locks the site fractions of all elements that **are not allowed to vary** in place. In the example above, C and Mn were defined as elements allowed to vary. When the composition is locked, then we obtain:
+When we are modelling local changes of composition in a material, one tricky thing that we face is that changing the fraction of one element changes the fractions of all other elements. This happens because the average molar mass changes. Normally, the intent is that you want to change the fraction of an element and keep the **site fractions** of all other elements fixed. So in the `Composition` class, there is a method `LockComposition` that locks the site fractions of all elements that **are not allowed to vary** in place. In the example above, C and Mn were defined as elements allowed to vary. When the composition is locked, then we obtain:
 
 ```cpp
 comp.LockComposition();
@@ -117,6 +121,7 @@ comp.Print(); // The Print function calls UpdateFractions() automatically
 ```
 
 ```
+Cannot set locked X(Si) composition
         | At. fraction (X) | Wt. fraction (W) | Site fraction (U)
   ------+------------------+------------------+-------------------
     Fe* |         0.949205 |         0.972907 |          0.978561
