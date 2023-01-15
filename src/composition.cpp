@@ -13,7 +13,7 @@ static std::string toTitleCase(const std::string& str)
 }
 
 /** @brief Constructor of ElementData
- * 
+ *
  * @param element The element from the periodic table (see the PeriodicTable namespace)
  * @param isVariable Boolean. If true, composition of element is allowed to change even if Composition is locked (Default: false)
  * @param isInterstitial Boolean. If true, it is interstitial element (substitutional, otherwise) (Default: false)
@@ -30,37 +30,45 @@ ElementData::ElementData(const PeriodicTable::Element& element, bool isVariable,
 }
 
 /** @brief Set mole fraction of element
- * 
+ *
  * @param x Mole fraction
  */
 void ElementData::SetX(double x)
 {
-    if (mvIsAllowedToVary) {
-        mvUserX = mvX = x;
-        mvUserW = mvW = mvU = 0.0;
-        mvIsUpdated = false;
-    } else {
-        fprintf(stderr, "Cannot set locked X(%s) composition\n", mvSymbol.c_str());
+    if (mvIsMajor) {
+        fprintf(stderr, "Cannot set X(%s) composition of major element\n", mvSymbol.c_str());
+        return;
     }
+    if (!mvIsAllowedToVary) {
+        fprintf(stderr, "Cannot set locked X(%s) composition\n", mvSymbol.c_str());
+        return;
+    }
+    mvUserX = mvX = x;
+    mvUserW = mvW = mvU = 0.0;
+    mvIsUpdated = false;
 }
 
 /** @brief Set weight fraction of element
- * 
+ *
  * @param w Weight fraction
  */
 void ElementData::SetW(double w)
 {
-    if (mvIsAllowedToVary) {
-        if (!mvIsCompositionLocked) {
-            mvUserW = mvW = w;
-            mvUserX = mvX = mvU = 0.0;
-            mvIsUpdated = false;
-        } else {
-            fprintf(stderr, "Setting mass fraction W(%s) not supported when composition is locked. Try setting in atomic fraction (ElementData::SetX) instead\n", mvSymbol.c_str());
-        }
-    } else {
-        fprintf(stderr, "Cannot set locked W(%s) composition\n", mvSymbol.c_str());
+    if (mvIsMajor) {
+        fprintf(stderr, "Cannot set W(%s) composition of major element\n", mvSymbol.c_str());
+        return;
     }
+    if (!mvIsAllowedToVary) {
+        fprintf(stderr, "Cannot set locked W(%s) composition\n", mvSymbol.c_str());
+        return;
+    }
+    if (mvIsCompositionLocked) {
+        fprintf(stderr, "Setting mass fraction W(%s) not supported when composition is locked. Try setting in atomic fraction (ElementData::SetX) instead\n", mvSymbol.c_str());
+        return;
+    }
+    mvUserW = mvW = w;
+    mvUserX = mvX = mvU = 0.0;
+    mvIsUpdated = false;
 }
 
 /// @brief Updates the pointers to the elements (mvpMajorElement, mvAlloyingElements, etc...)
@@ -126,10 +134,10 @@ void CompositionBase::updatePointers()
     mvArePointersUpdated = true;
 }
 
-/** @brief operator[] for accessing elements by their names 
- * 
+/** @brief operator[] for accessing elements by their names
+ *
  * @param elementSymbol The element name
- * 
+ *
  * @return Pointer to ElementData
  */
 ElementData& CompositionBase::operator[](const std::string& elementSymbol)
@@ -149,10 +157,10 @@ ElementData& CompositionBase::operator[](const std::string& elementSymbol)
     throw std::runtime_error(msg);
 }
 
-/** @brief const version of operator[] for accessing elements by their names 
- * 
+/** @brief const version of operator[] for accessing elements by their names
+ *
  * @param elementSymbol The element name
- * 
+ *
  * @return Const pointer to respective ElementData
  */
 const ElementData& CompositionBase::operator[](const std::string& elementSymbol) const
@@ -219,7 +227,7 @@ void Composition::UpdateFractions()
 }
 
 /** @brief Updates the fractions and prints composition
- * 
+ *
  * @param stream The file stream (stdout by default)
  */
 void Composition::Print(FILE* stream)
@@ -238,7 +246,7 @@ void Composition::Print(FILE* stream)
 }
 
 /** @brief Prints the composition
- * 
+ *
  * @param stream The file stream (stdout by default)
  */
 void Composition::Print(FILE* stream) const
@@ -257,7 +265,7 @@ void Composition::Print(FILE* stream) const
     fprintf(stream, "  Average molar mass: %8g\n", mvMolarMassAvg);
 }
 
-/** @brief Private implementation of update fractions that is used when 
+/** @brief Private implementation of update fractions that is used when
  * the composition is unlocked
  */
 void Composition::updateFractions()
