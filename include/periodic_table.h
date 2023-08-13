@@ -1,4 +1,4 @@
-/// @file src/periodic_table.h
+/// @file periodic_table.h
 
 #ifndef PERIODIC_TABLE_H
 #define PERIODIC_TABLE_H

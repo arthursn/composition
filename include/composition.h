@@ -1,4 +1,4 @@
-/// @file src/composition.h
+/// @file composition.h
 
 #ifndef COMPOSITION_H
 #define COMPOSITION_H
