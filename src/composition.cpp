@@ -151,10 +151,7 @@ ElementData& CompositionBase::operator[](const std::string& elementSymbol)
         }
     }
 
-    // Abort (throw exception) if cannot not find the element
-    char msg[30]; // This should be long enough
-    sprintf(msg, "Element %s is not defined", elementSymbolTitle.c_str());
-    throw std::runtime_error(msg);
+    throw std::runtime_error("Element " + elementSymbolTitle + " is not defined");
 }
 
 /** @brief const version of operator[] for accessing elements by their names
@@ -172,10 +169,7 @@ const ElementData& CompositionBase::operator[](const std::string& elementSymbol)
         }
     }
 
-    // Abort (throw exception) if cannot not find the element
-    char msg[30]; // This should be long enough
-    sprintf(msg, "Element %s is not defined", elementSymbolTitle.c_str());
-    throw std::runtime_error(msg);
+    throw std::runtime_error("Element " + elementSymbolTitle + " is not defined");
 }
 
 /// @brief Locks composition, i.e., keeps site fraction of non-variable elements fixed
@@ -260,7 +254,7 @@ void Composition::Print(FILE* stream) const
 
         unsigned char pos = pEl->mvIsMajor ? 2 : (pEl->mvIsAllowedToVary ? 1 : 0);
         fprintf(stream, "   %c%2s%c | %16.6g | %16.6g | %17.6g\n",
-            ">  "[pos], pEl -> mvSymbol.c_str(), "< *"[pos], pEl -> mvX, pEl -> mvW, pEl -> mvU);
+            ">  "[pos], pEl->mvSymbol.c_str(), "< *"[pos], pEl->mvX, pEl->mvW, pEl->mvU);
     }
     fprintf(stream, "  Average molar mass: %8g\n", mvMolarMassAvg);
 }
