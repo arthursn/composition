@@ -1,4 +1,4 @@
-#include "composition.h"
+#include "composition.hpp"
 
 /// The defined steel elements. The DO notation is used here due to the X Macro
 /// technique used for making this class dynamic (see https://en.wikipedia.org/wiki/X_Macro)

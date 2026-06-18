@@ -3,7 +3,7 @@
 #ifndef COMPOSITION_H
 #define COMPOSITION_H
 
-#include "periodic_table.h"
+#include "periodic_table.hpp"
 #include <map>
 #include <string>
 #include <vector>
@@ -136,12 +136,12 @@ typedef PointersContainer<ElementData> ContainerElements;
 typedef PointersContainer<const ElementData> ContainerConstElements;
 
 /** @brief Base class to Composition with pointers to the the elements
- * 
+ *
  * The pointers are used here to be able to dynamically loop through
- * all defined elements (ElementData), without having to make use of 
+ * all defined elements (ElementData), without having to make use of
  * maps or copies of the elements. The pointers are non-copyable or
  * moveable because they should refer exclusively to the element data
- * instantiated with an instance of the Composition class. Otherwise, 
+ * instantiated with an instance of the Composition class. Otherwise,
  * we could have pointers to elements from other instances.
  */
 class CompositionBase {
@@ -205,7 +205,7 @@ public:
     ContainerConstElements GetElements() const { return ContainerConstElements(getElementPointers()); }
 };
 
-/** @brief Class used for composition base conversions: atomic <-> mass 
+/** @brief Class used for composition base conversions: atomic <-> mass
  * fractions
  *
  * Note: while the performance of the composition conversion in this class
@@ -254,21 +254,21 @@ private:                                                                        
     VectorConstElementPointers getElementPointers() const { return { FOR_ELEMENTS(APPEND_ELEMENT_POINTER) }; }
 
 /** @brief Make a composition class for a given set of elements
- * 
+ *
  * The macro takes two arguments, the name of the class ClassName and the
- * macro FOR_ELEMENTS. In FOR_ELEMENTS are defined and used in the 
+ * macro FOR_ELEMENTS. In FOR_ELEMENTS are defined and used in the
  * following maner:
- * 
+ *
  * @code{.cpp}
  * #define FOR_STEEL_ELEMENTS(DO) \
  *     DO(Fe, false, false, true) \
  *     DO(C, true, true)          \
  *     DO(Mn, false, true)        \
  *     DO(Si)
- *     
+ *
  * MAKE_COMPOSITION_CLASS(CompositionSteel, FOR_STEEL_ELEMENTS)
  * @endcode
- * 
+ *
  * The DO notation in FOR_STEEL_ELEMENTS is used due to the X Macro
  * technique used for making this class dynamic (see https://en.wikipedia.org/wiki/X_Macro)
  * The arguments in the DO macro call follow the Constructor of ElementData,

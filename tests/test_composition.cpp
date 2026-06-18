@@ -1,6 +1,6 @@
 /// Basic test suite for libcomposition using plain assert()
 
-#include "composition.h"
+#include "composition.hpp"
 #include <cassert>
 #include <cmath>
 #include <cstdio>

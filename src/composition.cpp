@@ -1,4 +1,4 @@
-#include "composition.h"
+#include "composition.hpp"
 #include <cstdio>
 #include <stdexcept>
 
