@@ -1,70 +1,59 @@
 # libcomposition
 
-# Background
+## Background
 
-The conversion between atomic and weight composition bases is normally a very straightforward problem. Having the molar masses of the elements, one can easily determine the average molar mass and from then convert the individual fractions of each element.
+Converting between atomic and weight composition bases is straightforward when all fractions are given in the same base: knowing the molar masses of the elements, one can compute the average molar mass and convert individual fractions. However, when fractions of some elements are given in the atomic base and others in the weight base, the problem becomes more involved. The conversion equations are derived in [docs > conversionComposition](docs/conversionComposition.md).
 
-However, if for some reason the composition is provided by defining the fractions of some elements in the atomic base and others in the weight base, then the problem becomes a little bit more complicated. Yet, it is perfectly possible to make the conversion. The equations for base conversion are presented in the supplementary document in [docs > conversionComposition](docs/conversionComposition.md).
+## Design
 
-Okay, having the equations remove one thing out of the way. Now we want to write a C++ that does that. But we want the class to be dynamic, supporting multiple elements, but at the same time fast. A very bad idea is to use use `std::map` for that, because accessing the elements of the map by key is quite slow. It would be nicer if we could access the fractions of each element by symbol, but having the symbols as public member variables of the composition class.
+A natural way to represent a composition in C++ is a class with one member variable per element, allowing direct access like `comp.Fe` or `comp.C`. The challenge is making this flexible — different use cases require different sets of elements — without sacrificing performance. A map-based approach (e.g., `std::map<std::string, ElementData>`) would allow dynamic element sets but at the cost of slow key lookups.
 
-# Usage
+The solution here is compile-time code generation using the [X-macro](https://en.wikipedia.org/wiki/X_Macro) pattern — a C preprocessor metaprogramming technique. The user defines the element set in a `FOR_ELEMENTS` macro, and `MAKE_COMPOSITION_CLASS` expands it into a complete, fully typed class at preprocessing time. The result is a class with named member variables per element, with no runtime overhead over a hand-written class.
 
-The solution I found is MACROS! In `composition.h` we define an abstract class `Composition`. `Composition` itself has no elements defined. So, by itself it is useless. In your project, you have to create a class derived from `Composition` in your file preamble or in a separate header file. This can be done manually, or by using the `MAKE_COMPOSITION_CLASS` macro:
+## Usage
+
+Define your element set and generate the class in a header or at the top of your source file:
 
 ```cpp
 #include "composition.h"
 
-/* The defined steel elements. The DO notation is used here due to the X Macro
-technique used for making this class dynamic (see https://en.wikipedia.org/wiki/X_Macro)
-The arguments in the DO macro call follow the Constructor of ElementData,
-i.e., are respectively the element symbol, isVariable, isInterstitial, and
-isMajor */
+/* Define the elements. Arguments follow the ElementData constructor:
+   element symbol, isVariable, isInterstitial, isMajor */
 #define FOR_ELEMENTS(DO)       \
     DO(Fe, false, false, true) \
     DO(C, true, true)          \
     DO(Mn, true)               \
     DO(Si)
 
-// Makes the CompositionSteel class
 MAKE_COMPOSITION_CLASS(CompositionSteel, FOR_ELEMENTS)
 ```
 
-Notice that you also have to defined a `FOR_ELEMENTS` macro with this funny `DO` syntax. This is the X Macro technique that we use to make the class dynamic (see https://en.wikipedia.org/wiki/X_Macro).
-
-In the example above `MAKE_COMPOSITION_CLASS(CompositionSteel, FOR_ELEMENTS)` will be expanded in the pre-processing as the following `CompositionSteel` class:
+`MAKE_COMPOSITION_CLASS(CompositionSteel, FOR_ELEMENTS)` expands to:
 
 ```cpp
 class CompositionSteel : public Composition {
 public:
-    /* Define elements (ElementData) as public members */
     ElementData Fe = ElementData(PeriodicTable::Fe, false, false, true);
     ElementData C = ElementData(PeriodicTable::C, true, true);
     ElementData Mn = ElementData(PeriodicTable::Mn, true);
     ElementData Si = ElementData(PeriodicTable::Si);
 
 private:
-    /* Override virtual functions */
     VectorElementPointers getElementPointers() { return { &Fe, &C, &Mn, &Si }; }
     VectorConstElementPointers getElementPointers() const { return { &Fe, &C, &Mn, &Si }; }
-    
+
 public:
-    /* Constructor */
-    CompositionSteel()
-        : Composition()
-    {
-        updatePointers();
-    }
+    CompositionSteel() : Composition() { updatePointers(); }
 };
 ```
 
-The `ElementData` class stores the fractions of the element. When defining the `FOR_ELEMENTS` macro or instantiating `ElementData`, the arguments represent, in order:
-- `element`: the element symbol (in Title Case), whose properties are fetched from `periodictable.h`
-- `isInterstitial`: whether the element is interstitial or not (i.e., substitutional)
-- `isVariable`: whether the element is allowed to vary when the composition is locked, see [Locking compositions](#Locking-compositions))
-- `isMajor`: whether the element is the major element
+The arguments to `ElementData` are, in order:
+- `element`: element symbol (Title Case), whose properties are fetched from `periodictable.h`
+- `isVariable`: whether the element fraction is allowed to change when the composition is locked (see [Locking compositions](#locking-compositions))
+- `isInterstitial`: whether the element is interstitial (`true`) or substitutional (`false`)
+- `isMajor`: whether the element is the major element (e.g., Fe in steel)
 
-Then, in the body of your code, you can use the newly created class at will:
+### Setting and reading fractions
 
 ```cpp
 CompositionSteel comp;
@@ -75,8 +64,6 @@ comp.UpdateFractions();
 comp.Print();
 ```
 
-... will print:
-
 ```
         | At. fraction (X) | Wt. fraction (W) | Site fraction (U)
   ------+------------------+------------------+-------------------
@@ -86,38 +73,37 @@ comp.Print();
     Si  |            0.001 |      0.000512517 |        0.00102335
 ```
 
-For getting the fraction of an individual element:
+Individual fractions can be read directly:
 
 ```cpp
-comp.C.GetX(); // returns 0.0228126 (double)
-comp.Si.GetW(); // returns 0.000512517 (double)
+comp.C.GetX();   // 0.0228126
+comp.Si.GetW();  // 0.000512517
 ```
 
-Even though it is slower, you can also access the element using the map syntax:
+Elements can also be accessed by symbol string, though this is slower:
 
 ```cpp
 comp["C"].GetX();
 comp["Si"].GetW();
 ```
 
-You can loop through all elements with an iterator:
+And iterated over:
 
 ```cpp
-// Will print the weight fraction of all elements
 for (ElementData& el : comp.GetElements()) {
     std::cout << el.GetSymbol() << ": " << el.GetW() << std::endl;
 }
-
 ```
+
 ## Locking compositions
 
-When we are modelling local changes of composition in a material, one tricky thing that we face is that changing the fraction of one element changes the fractions of all other elements. This happens because the average molar mass changes. Normally, the intent is that you want to change the fraction of an element and keep the **site fractions** of all other elements fixed. So in the `Composition` class, there is a method `LockComposition` that locks the site fractions of all elements that **are not allowed to vary** in place. In the example above, C and Mn were defined as elements allowed to vary. When the composition is locked, then we obtain:
+When modelling local composition changes in a material, changing the fraction of one element affects all others through the average molar mass. Often the intent is to change one element's fraction while keeping the **site fractions** of all others fixed. `LockComposition()` achieves this by fixing the site fractions of all elements marked as non-variable.
 
 ```cpp
 comp.LockComposition();
 comp.C.SetX(3e-2);
-comp.Si.SetX(3e-2); // This will result in a ERROR message because Si is locked
-comp.Print(); // The Print function calls UpdateFractions() automatically
+comp.Si.SetX(3e-2); // Error: Si is locked
+comp.Print();
 ```
 
 ```
@@ -130,17 +116,15 @@ Cannot set locked X(Si) composition
    >Si< |      0.000992645 |      0.000511686 |        0.00102335
 ```
 
-Notice that the site fractions of all elements (except C) remained the same.
+The site fractions of all elements except C remain unchanged.
 
-# Compilation
+## Compilation
 
-CMake is used for building the source files as a shared library:
+CMake is used to build the source files as a shared library:
 
 ```sh
-mkdir build
-cd build
-cmake ..
-make
+cmake -B build
+cmake --build build
 ```
 
-Then you can link the resulting library file with your project. Be sure to set correctly the path to  the `include` directory to be able to import the `composition.h` header. Of course you can use your own building system to compile the code. The class does not require any dependency.
+Link the resulting library with your project and add the `include` directory to your include path. No external dependencies are required.
